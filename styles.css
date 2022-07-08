@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gameBoard {
+    width: 600px;
+    height: 600px;
+    background-image: url(./img/board.png);
+    display: grid;
+    grid-template-columns: 191px 156px 191px;
+    column-gap: 32px;
+    grid-template-rows: 193px 159px 193px;
+    row-gap: 32px;
+    justify-items: center;
+    align-items: center;
+}
+
+.cell {
+    font-size: 6rem;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
