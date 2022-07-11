@@ -2,35 +2,40 @@ const gameBoard = (() => {
     //0 is blank, 1 is X, 2 is O.
     let boardArr = []
     const board = document.getElementById("board");
-    const populateBoardArr = () => {
-        if(boardArr.length===0) {
-            for(i=0;i<9;i++) {
-                boardArr.push(cellFactory());
+    const populateBoardArr = function() {
+        if(board.firstChild) {
+            while(board.firstChild) {
+                board.removeChild(board.firstChild);
             }
+        }
+        this.boardArr = [];
+        for(i=0;i<9;i++) {
+            this.boardArr.push(cellFactory());
         }
         return boardArr;
     }
 
-    const test = () => {
+    const test = function() {
         console.log("test");
+        console.log(this===gameBoard);
     }
     
-    const populateBoard = () => {
-        populateBoardArr()
-        for(i=0;i<boardArr.length;i++) {
-            if(boardArr[i].cell===0) {
+    const populateBoard = function() {
+        populateBoardArr.call(this);
+        for(i=0;i<this.boardArr.length;i++) {
+            if(this.boardArr[i].cell===0) {
                 let cell = document.createElement("div");
                 cell.textContent = "";
                 cell.setAttribute("class", "cell");
                 cell.setAttribute("id", i);
                 board.appendChild(cell);
-            } else if(boardArr[i].cell===1) {
+            } else if(this.boardArr[i].cell===1) {
                 let cell = document.createElement("div");
                 cell.textContent = "X";
                 cell.setAttribute("class", "cell");
                 cell.setAttribute("id", i);
                 board.appendChild(cell);
-            } else if(boardArr[i].cell===2) {
+            } else if(this.boardArr[i].cell===2) {
                 let cell = document.createElement("div");
                 cell.textContent = "O";
                 cell.setAttribute("class", "cell");
@@ -44,17 +49,13 @@ const gameBoard = (() => {
         });
      
     }
-    const clearBoard = () => {
-        boardArr = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-        return boardArr;
-    }
-    return {populateBoard, clearBoard, boardArr, test};
+
+    return {populateBoard, boardArr, test, populateBoardArr};
 })();
  
 const gameController = (() => {
-    let playerTurn = "two";
-    let playerOneName = "";
-    let playerTwoName = "";
+    let playerTurn = "one";
+    const playerOneLabel = document.getElementById("playerOneLabel");
 
     //Initializes the name input form and assigns names.
     const inputInit = () => {
@@ -76,24 +77,9 @@ const gameController = (() => {
 
     const checkForWin = (inputToCheck) => {
         function horizontalCheck(inputToCheck) {
-            let i = 0;
             let cellCount = 0;
-            for(let cell in gameBoard.boardArr) {
-                if(cell.cell===inputToCheck) {
-                    i++
-                } else {
-                    i = 0;
-                }
-                if(i===3) {
-                    return true;
-                }
-            }
-        }
-
-        function verticalCheck(inputToCheck) {
-            let cellCount = 0;
-            for(i=0;i<gameBoard.boardArr.length;i++) {
-                if(gameBoard.boardArr[i]===1) {
+            for(i=0;i<9;i++) {
+                if(gameBoard.boardArr[i].cell===inputToCheck) {
                     cellCount++
                 } else {
                     cellCount = 0;
@@ -101,53 +87,95 @@ const gameController = (() => {
                 if(cellCount===3) {
                     return true;
                 }
+            };
+
+            
+        }
+
+        function verticalCheck(inputToCheck) {
+            let cellCount = 0;
+            for(i=0;i<=2;i++) {
+                if(gameBoard.boardArr[i].cell===inputToCheck && 
+                    gameBoard.boardArr[i+3].cell===inputToCheck &&
+                    gameBoard.boardArr[i+6].cell===inputToCheck) {
+                        return true;
+                    }
             }
         }
 
         function diagCheck(inputToCheck) {
-            if ((gameBoard.boardArr[0]===inputToCheck &&
-                gameBoard.boardArr[4]===inputToCheck &&
-                gameBoard.boardArr[8]===inputToCheck) ||
-                (gameBoard.boardArr[2]===inputToCheck &&
-                gameBoard.boardArr[4]===inputToCheck &&
-                gameBoard.boardArr[6]===inputToCheck)) {
+            if ((gameBoard.boardArr[0].cell===inputToCheck &&
+                gameBoard.boardArr[4].cell===inputToCheck &&
+                gameBoard.boardArr[8].cell===inputToCheck) ||
+                (gameBoard.boardArr[2].cell===inputToCheck &&
+                gameBoard.boardArr[4].cell===inputToCheck &&
+                gameBoard.boardArr[6].cell===inputToCheck)) {
                     return true;
                 }
         }
-        horizontalCheck(inputToCheck);
-        verticalCheck(inputToCheck);
-        diagCheck(inputToCheck);
+        if(horizontalCheck(inputToCheck)) {return true;}
+        if(verticalCheck(inputToCheck)) {return true;}
+        if(diagCheck(inputToCheck)) { return true;}
     }
 
     const changeTurn = () => {
-        if(gameController.playerTurn==="one") {
-            gameController.playerTurn = "two";
-        } else if(gameController.playerTurn==="two") {
-            gameController.playerTurn = "one";
+        const playerOneLabel = document.getElementById("playerOneLabel");
+        const playerTwoLabel = document.getElementById("playerTwoLabel");
+        const winOverlay = document.getElementById("winOverlay");
+        
+        const changePlayer = () => {
+            if(gameController.playerTurn==="one") {
+                playerOneLabel.setAttribute("class", "player");
+                playerTwoLabel.setAttribute("class", "player selected");
+                gameController.playerTurn = "two";
+            } else if(gameController.playerTurn==="two") {
+                playerTwoLabel.setAttribute("class", "player");
+                playerOneLabel.setAttribute("class", "player selected");
+                gameController.playerTurn = "one";
+            }
         }
-        if(checkForWin(1)) {prompt(`${gameController.playerOneName} wins!`)};
-        if(checkForWin(2)) {prompt(`${gameController.playerTwoName} wins!`)};
+        
+        if(checkForWin(1)) {
+            winOverlay.textContent = `${playerOneLabel.textContent} wins!`
+            setTimeout(() => {
+                gameBoard.populateBoard();
+                winOverlay.textContent = "";
+            }, 3000);
+            return;
+        }
+        if(checkForWin(2)) {
+            winOverlay.textContent = `${playerTwoLabel.textContent} wins!`
+            setTimeout(() => {
+                gameBoard.populateBoard();
+                winOverlay.textContent = "";
+                changePlayer();
+            }, 3000);
+            return;
+        } else {
+            changePlayer();
+        }
         }
 
-    return {playerTurn, inputInit, playerOneName, playerTwoName, checkForWin, changeTurn};
+
+
+    return {playerTurn, inputInit, checkForWin, changeTurn};
 
 })();
 
 
 const cellFactory = function() {
     let cell = 0;
-    let changeContent = (cellClicked) => {
+    const changeContent = function(cellClicked) {
         let cellToChange = document.getElementById(cellClicked);
-        let cellArrToChange = gameBoard.boardArr[cellClicked];
         if(gameController.playerTurn==="one") {
             if(cell===0) {
-                cellArrToChange.cell = 1;
+                this.cell = 1;
                 cellToChange.textContent = "X";
                 gameController.changeTurn();
             }
         } else if(gameController.playerTurn==="two") {
             if(cell===0) {
-                cellArrToChange.cell = 2;
+                this.cell = 2;
                 cellToChange.textContent = "O";
                 gameController.changeTurn();
             }

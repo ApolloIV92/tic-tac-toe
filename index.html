@@ -8,12 +8,15 @@
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-    <div class="header">Tic-Tac-Toe!</div>
+    <div class="header">
+        <span>Tic-Tac-Toe!</span>
+        <div class="winOverlay" id="winOverlay"></div>
+    </div>
     <div class="gameBody">
-        <div class="player" id="playerOneLabel">Player One: </div>
+        <div class="player selected" id="playerOneLabel">Player One </div>
         <div class="gameBoard" id="board">
         </div>
-        <div class="player" id="playerTwoLabel">Player Two: </div>
+        <div class="player" id="playerTwoLabel">Player Two </div>
     </div>
     <div class="overlay" id="overlay">
         <div class="inputPanel">

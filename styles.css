@@ -69,13 +69,20 @@ body {
     height: 150px;
     background-color: lightblue;
     align-items: center;
+    justify-content: space-between;
     padding-left: 30px;
     font-size: 4rem;
     font-weight: bold;
     margin-bottom: 50px;
     box-shadow: 0px 5px 5px gray;
-
 }
+
+
+.winOverlay {
+    color: red;
+    padding-right: 40px;
+}
+
 .gameBody {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
@@ -86,7 +93,11 @@ body {
     font-size: 3rem;
     justify-content: center;
     align-items: flex-start;
-    
+}
+
+.selected {
+    color: red;
+    font-weight: bold;
 }
 
 .gameBoard {
