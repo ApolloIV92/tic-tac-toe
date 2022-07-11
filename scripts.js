@@ -1,7 +1,10 @@
 const gameBoard = (() => {
-    //0 is blank, 1 is X, 2 is O.
+    //Handles population of the JavaScript board array, as well as populating
+    //the actual board DOM object with clickable cells.
+
     let boardArr = []
     const board = document.getElementById("board");
+
     const populateBoardArr = function() {
         if(board.firstChild) {
             while(board.firstChild) {
@@ -14,34 +17,15 @@ const gameBoard = (() => {
         }
         return boardArr;
     }
-
-    const test = function() {
-        console.log("test");
-        console.log(this===gameBoard);
-    }
     
     const populateBoard = function() {
         populateBoardArr.call(this);
         for(i=0;i<this.boardArr.length;i++) {
-            if(this.boardArr[i].cell===0) {
                 let cell = document.createElement("div");
                 cell.textContent = "";
                 cell.setAttribute("class", "cell");
                 cell.setAttribute("id", i);
                 board.appendChild(cell);
-            } else if(this.boardArr[i].cell===1) {
-                let cell = document.createElement("div");
-                cell.textContent = "X";
-                cell.setAttribute("class", "cell");
-                cell.setAttribute("id", i);
-                board.appendChild(cell);
-            } else if(this.boardArr[i].cell===2) {
-                let cell = document.createElement("div");
-                cell.textContent = "O";
-                cell.setAttribute("class", "cell");
-                cell.setAttribute("id", i);
-                board.appendChild(cell);
-            }
         }
         const cells = document.getElementsByClassName("cell");
         Array.from(cells).forEach((cell) => {
@@ -50,13 +34,16 @@ const gameBoard = (() => {
      
     }
 
-    return {populateBoard, boardArr, test, populateBoardArr};
+    return {populateBoard, boardArr};
 })();
  
 const gameController = (() => {
+    //Controls game flow and stores pertinent variables such as which player's
+    //turn it is and how many moves have happened. Also contains logic to check
+    //for winning moves after each turn.
+    
     let playerTurn = "one";
     let moveCount = 0;
-    const playerOneLabel = document.getElementById("playerOneLabel");
 
     //Initializes the name input form and assigns names.
     const inputInit = () => {
@@ -215,12 +202,13 @@ const gameController = (() => {
 
 
 
-    return {playerTurn, inputInit, checkForWin, changeTurn, moveCount};
+    return {playerTurn, inputInit, changeTurn};
 
 })();
 
 
 const cellFactory = function() {
+    //A cell of 0 is blank, 1 is X, 2 is O.
     let cell = 0;
     const changeContent = function(cellClicked) {
         let cellToChange = document.getElementById(cellClicked);
