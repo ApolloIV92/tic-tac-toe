@@ -77,7 +77,6 @@ body {
     box-shadow: 0px 5px 5px gray;
 }
 
-
 .winOverlay {
     color: red;
     padding-right: 40px;
@@ -91,13 +90,43 @@ body {
 .player {
     display: flex;
     font-size: 3rem;
+    background-color: lightgray;
+    width: 100%;
+    border: 2px solid black;
+    border-radius: 8px;
     justify-content: center;
     align-items: flex-start;
+}
+
+.playerColumnOne {
+    margin-left: 10px;
+}
+
+.playerColumnTwo {
+    margin-right: 10px;
 }
 
 .selected {
     color: red;
     font-weight: bold;
+}
+
+.win, .loss, .tie {
+    font-weight: bold;
+    font-size: 3rem;
+}
+
+.win {
+    color: gold;
+
+}
+
+.loss {
+    color: red;
+}
+
+.tie {
+    color: black;
 }
 
 .gameBoard {
