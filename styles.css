@@ -1,12 +1,21 @@
+:root {
+    --colorOne: #212221;
+    --colorTwo: #1181B2;
+    --colorThree: #DDEDF4;
+    --colorFour: #44449B;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+
 body {
     position: relative;
     height: 100vh;
+    background-color: var(--colorThree);
 }
 
 .overlay {
@@ -55,30 +64,33 @@ body {
     width: 300px;
 }
 
+
 .inputPanel button {
     margin-top: 30px;
     width: 300px;
     line-height: 2;
     font-size: 1.5rem;
     align-self: center;
+    cursor: pointer;
 }
 
 .header {
     display: flex;
     width: 100%;
     height: 150px;
-    background-color: lightblue;
+    background-color: var(--colorTwo);
+    color: var(--colorOne);
     align-items: center;
     justify-content: space-between;
     padding-left: 30px;
     font-size: 4rem;
     font-weight: bold;
     margin-bottom: 50px;
-    box-shadow: 0px 5px 5px gray;
+    box-shadow: 0px 5px 5px var(--colorOne);
 }
 
 .winOverlay {
-    color: red;
+    color: var(--colorFour);
     padding-right: 40px;
 }
 
@@ -87,12 +99,20 @@ body {
     grid-template-columns: 1fr 2fr 1fr;
 }
 
+#piece {
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+
 .player {
     display: flex;
     font-size: 3rem;
     background-color: lightgray;
     width: 100%;
     border: 2px solid black;
+    box-shadow: 3px 3px 5px var(--colorOne);
     border-radius: 8px;
     justify-content: center;
     align-items: flex-start;
@@ -107,7 +127,7 @@ body {
 }
 
 .selected {
-    color: red;
+    color: var(--colorFour);
     font-weight: bold;
 }
 

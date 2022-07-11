@@ -26,13 +26,17 @@ const gameBoard = (() => {
                 cell.setAttribute("class", "cell");
                 cell.setAttribute("id", i);
                 board.appendChild(cell);
-        }
+        };
+    
         const cells = document.getElementsByClassName("cell");
+
         Array.from(cells).forEach((cell) => {
-            cell.addEventListener("click", (e) => gameBoard.boardArr[e.target.id].changeContent(e.target.id));
+            cell.addEventListener("click", (e) => 
+            gameBoard.boardArr[e.target.id].changeContent(e.target.id));
+
         });
      
-    }
+    };
 
     return {populateBoard, boardArr};
 })();
@@ -41,11 +45,12 @@ const gameController = (() => {
     //Controls game flow and stores pertinent variables such as which player's
     //turn it is and how many moves have happened. Also contains logic to check
     //for winning moves after each turn.
-    
+
     let playerTurn = "one";
     let moveCount = 0;
 
     //Initializes the name input form and assigns names.
+
     const inputInit = () => {
         const playerOneField = document.getElementById("playerOne");
         const playerTwoField = document.getElementById("playerTwo");
@@ -104,6 +109,8 @@ const gameController = (() => {
         if(diagCheck(inputToCheck)) {return true;}
     }
 
+    //Adds a win, loss, or tie to the appropriate player's column.
+
     const addOutcome = (type, player) => {
         const playerOneColumn = document.getElementById("wCounterOne");
         const playerTwoColumn = document.getElementById("wCounterTwo");
@@ -134,6 +141,9 @@ const gameController = (() => {
             }
         }
     }
+
+    //Logic that happens with each turn change. Calls function to check for a
+    //win, then checks for a tie, and if none have happened passes the turn.
 
     const changeTurn = function() {
         const playerOneLabel = document.getElementById("playerOneLabel");
@@ -207,6 +217,12 @@ const gameController = (() => {
 })();
 
 
+//Factory object for all of the clickable cells. Each cell object has a
+//function that takes the target ID of it's associated DOM element as an
+//argument, then uses that to change the correct DOM element
+//to an X or O. Also stores it's state for use in calculation of any
+//winning moves in the gameController object.
+
 const cellFactory = function() {
     //A cell of 0 is blank, 1 is X, 2 is O.
     let cell = 0;
@@ -214,22 +230,24 @@ const cellFactory = function() {
         let cellToChange = document.getElementById(cellClicked);
         let winOverlay = document.getElementById("winOverlay");
         if(gameController.playerTurn==="one" && !winOverlay.textContent) {
-            if(cellToChange.textContent==="") {
+            if(gameBoard.boardArr[cellClicked].cell===0) {
                 this.cell = 1;
                 cellToChange.textContent = "X";
                 gameController.changeTurn();
             }
         } else if(gameController.playerTurn==="two" && !winOverlay.textContent) {
-            if(cellToChange.textContent==="") {
+            if(gameBoard.boardArr[cellClicked].cell===0) {
                 this.cell = 2;
                 cellToChange.textContent = "O";
                 gameController.changeTurn();
             }
         }
-    
-    }
-    return {cell, changeContent};
 }
+    
+
+    
+    return {cell, changeContent};
+};
 
 gameController.inputInit();
 gameBoard.populateBoard();
