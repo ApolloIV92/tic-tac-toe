@@ -114,7 +114,7 @@ const gameController = (() => {
         }
         if(horizontalCheck(inputToCheck)) {return true;}
         if(verticalCheck(inputToCheck)) {return true;}
-        if(diagCheck(inputToCheck)) { return true;}
+        if(diagCheck(inputToCheck)) {return true;}
     }
 
     const addOutcome = (type, player) => {
@@ -165,29 +165,36 @@ const gameController = (() => {
             }
         }
         
-        if(checkForWin(1)) {
-            winOverlay.textContent = `${playerOneLabel.textContent} wins!`
-            addOutcome("win", "one");
-            addOutcome("loss", "two");
-            this.moveCount = 0;
-            setTimeout(() => {
-                gameBoard.populateBoard();
-                winOverlay.textContent = "";
-            }, 3000);
-            return;
+        if (gameController.playerTurn==="one") {
+            if(checkForWin(1)) {
+                winOverlay.textContent = `${playerOneLabel.textContent} wins!`
+                addOutcome("win", "one");
+                addOutcome("loss", "two");
+                this.moveCount = 0;
+                setTimeout(() => {
+                    gameBoard.populateBoard();
+                    winOverlay.textContent = "";
+                }, 3000);
+                return;
+            }
         }
-        if(checkForWin(2)) {
-            winOverlay.textContent = `${playerTwoLabel.textContent} wins!`
-            addOutcome("win", "two");
-            addOutcome("loss", "one");
-            this.moveCount = 0;
-            setTimeout(() => {
-                gameBoard.populateBoard();
-                winOverlay.textContent = "";
-                changePlayer();
-            }, 3000);
-            return;
-        } if(this.moveCount===8) {
+
+        if (gameController.playerTurn==="two") {
+                if(checkForWin(2)) {
+                winOverlay.textContent = `${playerTwoLabel.textContent} wins!`
+                addOutcome("win", "two");
+                addOutcome("loss", "one");
+                this.moveCount = 0;
+                setTimeout(() => {
+                    gameBoard.populateBoard();
+                    winOverlay.textContent = "";
+                    changePlayer();
+                }, 3000);
+                return;
+            }
+        }
+
+        if(this.moveCount===8) {
             winOverlay.textContent = `Tie game!`
             addOutcome("tie", "two");
             addOutcome("tie", "one");
@@ -198,10 +205,11 @@ const gameController = (() => {
                 changePlayer();
             }, 3000);
             return;
-        } else {
+        } 
+        
+        else {
             this.moveCount++
-            changePlayer();
-            
+            changePlayer();   
         }
         }
 
